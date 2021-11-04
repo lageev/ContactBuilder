@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.geekvvv.contactbuilder.data.Contacts
+import kotlin.random.Random
 import kotlin.text.StringBuilder
 
 class MainActivity : AppCompatActivity() {
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         for (index in 1..size) {
             contacts.add(
                 Contacts(
-                    "${familyName[getNameRandom(familyName.length)]}${createName(index)}",
+                    "${familyName[Random.nextInt(0, familyName.length)]}${createName(index)}",
                     "${getPhoneRandom()}"
                 )
             )
@@ -92,8 +93,8 @@ class MainActivity : AppCompatActivity() {
         values.clear()
     }
 
-    private val simpleGirlName = girlName[getNameRandom(girlName.length)].toString()
-    private val simpleBoyName = boyName[getNameRandom(boyName.length)].toString()
+    private val simpleGirlName = girlName[Random.nextInt(0, girlName.length)].toString()
+    private val simpleBoyName = boyName[Random.nextInt(0, boyName.length)].toString()
 
 
     private fun createName(index: Int): String {
@@ -115,9 +116,6 @@ class MainActivity : AppCompatActivity() {
         return builder.toString()
     }
 
-    private fun getNameRandom(nameSize: Int): Int {
-        return (0..nameSize).random()
-    }
 
     private fun getPhoneRandom() = (1000000000..1999999999).random()
 }
