@@ -8,25 +8,53 @@ import android.provider.ContactsContract
 import android.provider.ContactsContract.RawContacts
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.Data
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.geekvvv.contactbuilder.data.Contacts
+import kotlin.text.StringBuilder
 
 class MainActivity : AppCompatActivity() {
+
+    private val familyName =
+        "陈林黄张李王吴刘蔡杨许郑谢洪郭邱曾廖赖徐周叶苏庄吕江何萧罗高周叶苏庄吕江何萧罗高潘简朱锺彭游詹胡施沈余卢梁赵颜柯翁魏孙戴范方宋邓杜傅侯曹薛丁卓马阮董唐温蓝蒋石古纪姚连冯欧程汤黄田康姜汪白邹尤巫钟黎涂龚严韩袁金童陆夏柳凃邵"
+    private val girlName =
+        "嘉琼桂娣叶璧璐娅琦晶妍茜秋珊莎锦黛青倩婷姣婉娴瑾颖露瑶怡婵雁蓓纨仪荷丹蓉眉君琴蕊薇菁梦岚苑婕馨瑗琰韵融园艺咏卿聪澜纯毓悦昭冰爽琬茗羽希宁欣飘育滢馥筠柔竹霭凝晓欢霄枫芸菲寒伊亚宜可姬舒影荔枝思丽秀娟英华慧巧美娜静淑惠珠翠雅芝玉萍红娥玲芬芳燕彩春菊勤珍贞莉兰凤洁梅琳素云莲真环雪荣爱妹霞香月莺媛艳瑞凡佳"
+    private val boyName =
+        "辰士以建家致树炎德行时泰盛雄琛钧冠策腾伟刚勇毅俊峰强军平保东文辉力明永健世广志义兴良海山仁波宁贵福生龙元全国胜学祥才发成康星光天达安岩中茂武新利清飞彬富顺信子杰楠榕风航弘"
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        createList(createRawData())
+        val actionButton = findViewById<TextView>(R.id.action_button)
+        val editText = findViewById<EditText>(R.id.edit_text)
+        actionButton.setOnClickListener {
+            val text = editText.text
+            if (text.isNullOrEmpty() || text.toString() == "0") {
+                Toast.makeText(this, "请输入大于0的整数", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            createList(createRawData(text.toString().toInt()))
+        }
+
     }
 
-    private fun createRawData() :List<Contacts>{
+    private fun createRawData(size: Int): List<Contacts> {
         val contacts = arrayListOf<Contacts>()
-        for (index in 1..10){
-            contacts.add(Contacts("张三$index","1888888888${index-1}"))
+        for (index in 1..size) {
+            contacts.add(
+                Contacts(
+                    "${familyName[getNameRandom(familyName.length)]}${createName(index)}",
+                    "${getPhoneRandom()}"
+                )
+            )
         }
         return contacts
     }
 
-    private fun createList(contacts:List<Contacts>){
+    private fun createList(contacts: List<Contacts>) {
         contacts.forEach {
             addContact(it)
         }
@@ -63,4 +91,33 @@ class MainActivity : AppCompatActivity() {
         contentResolver.insert(Data.CONTENT_URI, values)
         values.clear()
     }
+
+    private val simpleGirlName = girlName[getNameRandom(girlName.length)].toString()
+    private val simpleBoyName = boyName[getNameRandom(boyName.length)].toString()
+
+
+    private fun createName(index: Int): String {
+        val builder = StringBuilder()
+        val random = (0..10).random()
+        val isGirl = index % 2 == 0
+        if (isGirl) {
+            builder.append(simpleGirlName)
+        } else {
+            builder.append(simpleBoyName)
+        }
+        if (random > 5) {
+            if (isGirl) {
+                builder.append(simpleGirlName)
+            } else {
+                builder.append(simpleBoyName)
+            }
+        }
+        return builder.toString()
+    }
+
+    private fun getNameRandom(nameSize: Int): Int {
+        return (0..nameSize).random()
+    }
+
+    private fun getPhoneRandom() = (1000000000..1999999999).random()
 }
