@@ -36,13 +36,13 @@ class MainActivity : AppCompatActivity() {
 
         actionButton.setOnClickListener {
             val text = editText.text
-            if (text.isNullOrEmpty() || text.toString() == "0") {
+            if (text.isNullOrEmpty() || text.toString().toInt() <= 0) {
                 Toast.makeText(this, "请输入大于0的整数", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            PermissionX.init(this).permissions(Manifest.permission.WRITE_CONTACTS,Manifest.permission.READ_EXTERNAL_STORAGE)
-                .request{ allGranted, _, _ ->
-                    if (allGranted){
+            PermissionX.init(this).permissions(Manifest.permission.WRITE_CONTACTS)
+                .request { allGranted, _, _ ->
+                    if (allGranted) {
                         createList(createRawData(text.toString().toInt()))
                     }
                 }
@@ -63,11 +63,7 @@ class MainActivity : AppCompatActivity() {
         return contacts
     }
 
-    private fun createList(contacts: List<Contacts>) {
-        contacts.forEach {
-            addContact(it)
-        }
-    }
+    private fun createList(contacts: List<Contacts>) = contacts.forEach { addContact(it) }
 
     private fun addContact(contacts: Contacts) {
         val phone = contacts.phone
@@ -112,10 +108,15 @@ class MainActivity : AppCompatActivity() {
             builder.append(boyName[Random.nextInt(0, boyName.length)].toString())
         }
         if (random > 5) {
-            if (isGirl) {
-                builder.append(girlName[Random.nextInt(0, girlName.length)].toString())
-            } else {
-                builder.append(boyName[Random.nextInt(0, boyName.length)].toString())
+            when {
+                isGirl -> {
+                    builder.append(girlName[Random.nextInt(0, girlName.length)].toString())
+
+                }
+                else -> {
+                    builder.append(boyName[Random.nextInt(0, boyName.length)].toString())
+
+                }
             }
         }
         return builder.toString()
