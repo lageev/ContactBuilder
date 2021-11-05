@@ -1,5 +1,6 @@
 package com.geekvvv.contactbuilder
 
+import android.Manifest
 import android.os.Bundle
 import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.content.ContentUris
@@ -13,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.geekvvv.contactbuilder.data.Contacts
+import com.permissionx.guolindev.PermissionX
 import kotlin.random.Random
 import kotlin.text.StringBuilder
 
@@ -31,13 +33,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val actionButton = findViewById<TextView>(R.id.action_button)
         val editText = findViewById<EditText>(R.id.edit_text)
+
         actionButton.setOnClickListener {
             val text = editText.text
             if (text.isNullOrEmpty() || text.toString() == "0") {
                 Toast.makeText(this, "请输入大于0的整数", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            createList(createRawData(text.toString().toInt()))
+            PermissionX.init(this).permissions(Manifest.permission.WRITE_CONTACTS,Manifest.permission.READ_EXTERNAL_STORAGE)
+                .request{ allGranted, _, _ ->
+                    if (allGranted){
+                        createList(createRawData(text.toString().toInt()))
+                    }
+                }
         }
 
     }
