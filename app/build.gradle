@@ -11,7 +11,7 @@ android {
         applicationId "com.geekvvv.contactbuilder"
         minSdk 26
         targetSdk 30
-        versionCode 2111041
+        versionCode 2111051
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
