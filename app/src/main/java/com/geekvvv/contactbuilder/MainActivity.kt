@@ -102,24 +102,24 @@ class MainActivity : AppCompatActivity() {
         val builder = StringBuilder()
         val random = (0..10).random()
         val isGirl = index % 2 == 0
-        if (isGirl) {
-            builder.append(girlName[Random.nextInt(0, girlName.length)].toString())
-        } else {
-            builder.append(boyName[Random.nextInt(0, boyName.length)].toString())
-        }
+        appendName(isGirl, builder)
         if (random > 5) {
-            when {
-                isGirl -> {
-                    builder.append(girlName[Random.nextInt(0, girlName.length)].toString())
-
-                }
-                else -> {
-                    builder.append(boyName[Random.nextInt(0, boyName.length)].toString())
-
-                }
-            }
+            appendName(isGirl, builder)
         }
         return builder.toString()
+    }
+
+    private fun appendName(isGirl: Boolean, builder: StringBuilder) {
+        when {
+            isGirl -> {
+                builder.append(girlName[Random.nextInt(0, girlName.length)].toString())
+
+            }
+            else -> {
+                builder.append(boyName[Random.nextInt(0, boyName.length)].toString())
+
+            }
+        }
     }
 
 
