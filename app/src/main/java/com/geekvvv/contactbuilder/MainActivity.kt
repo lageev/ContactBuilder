@@ -93,24 +93,21 @@ class MainActivity : AppCompatActivity() {
         values.clear()
     }
 
-    private val simpleGirlName = girlName[Random.nextInt(0, girlName.length)].toString()
-    private val simpleBoyName = boyName[Random.nextInt(0, boyName.length)].toString()
-
 
     private fun createName(index: Int): String {
         val builder = StringBuilder()
         val random = (0..10).random()
         val isGirl = index % 2 == 0
         if (isGirl) {
-            builder.append(simpleGirlName)
+            builder.append(girlName[Random.nextInt(0, girlName.length)].toString())
         } else {
-            builder.append(simpleBoyName)
+            builder.append(boyName[Random.nextInt(0, boyName.length)].toString())
         }
         if (random > 5) {
             if (isGirl) {
-                builder.append(simpleGirlName)
+                builder.append(girlName[Random.nextInt(0, girlName.length)].toString())
             } else {
-                builder.append(simpleBoyName)
+                builder.append(boyName[Random.nextInt(0, boyName.length)].toString())
             }
         }
         return builder.toString()
