@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.content.ContentUris
 import android.content.ContentValues
+import android.graphics.Outline
 import android.provider.ContactsContract
 import android.provider.ContactsContract.RawContacts
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.Data
+import android.view.View
+import android.view.ViewOutlineProvider
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -32,6 +35,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val actionButton = findViewById<TextView>(R.id.action_button)
+        actionButton.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View?, outline: Outline?) {
+                outline?.setRoundRect(0, 0, view?.width!!, view.height, 16.dp)
+            }
+
+        }
+        actionButton.clipToOutline = true
         val editText = findViewById<EditText>(R.id.edit_text)
 
         actionButton.setOnClickListener {

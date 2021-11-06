@@ -4,37 +4,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:gravity="bottom"
     android:layout_height="match_parent"
     android:padding="24dp"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="请输入要生成联系人的数量\n（尽量小于20）"
-        android:textSize="24sp"
-        android:layout_gravity="center_horizontal"
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请输入要生成联系人的数量\n（尽量小于100）"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"
+            />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         />
 
-    <EditText
+    <com.mtjin.library.BorderEditText
         android:id="@+id/edit_text"
-        android:layout_width="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:layout_gravity="center_horizontal" />
-
-    <TextView
-        android:id="@+id/action_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/design_default_color_primary_variant"
         android:gravity="center"
-        android:minWidth="84dp"
         android:padding="16dp"
-        android:layout_marginTop="16dp"
-        android:text="确定"
-        android:textColor="@color/white"
-        android:layout_gravity="center_horizontal" />
+        android:hint="请输入要生成联系人的数量"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:inputType="number"
+        app:border_focused_activated="false"
+        app:border_corner_radius="16dp"
+        app:border_background_color="@color/grey_bg"
+        app:border_stroke_width="0dp" />
+
+        <TextView
+            android:id="@+id/action_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/design_default_color_primary_variant"
+            android:gravity="center"
+            android:minWidth="84dp"
+            android:padding="16dp"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal" />
+
+
+
 
 </LinearLayout>
