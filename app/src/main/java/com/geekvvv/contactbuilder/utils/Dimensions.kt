@@ -1,4 +1,4 @@
-package com.geekvvv.contactbuilder
+package com.geekvvv.contactbuilder.utils
 import android.content.res.Resources
 import android.util.TypedValue
 

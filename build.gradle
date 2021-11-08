@@ -22,10 +22,6 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
-        maven { url 'https://maven.aliyun.com/nexus/content/repositories/releases/' }
-        maven { url 'https://dl.bintray.com/thelasterstar/maven' }
-        maven { url 'https://dl.bintray.com/hpdx/maven/' }
-        maven { url 'https://repo1.maven.org/maven2/' }
     }
 }
 

@@ -5,11 +5,15 @@ import android.os.Bundle
 import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.content.ContentUris
 import android.content.ContentValues
+import android.content.Intent
 import android.graphics.Outline
+import android.net.Uri
 import android.provider.ContactsContract
 import android.provider.ContactsContract.RawContacts
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.Data
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewOutlineProvider
 import android.widget.EditText
@@ -17,6 +21,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.geekvvv.contactbuilder.data.Contacts
+import com.geekvvv.contactbuilder.utils.dp
 import com.permissionx.guolindev.PermissionX
 import kotlin.random.Random
 import kotlin.text.StringBuilder
@@ -35,12 +40,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val actionButton = findViewById<TextView>(R.id.action_button)
+        val infoText = findViewById<TextView>(R.id.info_text)
         actionButton.outlineProvider = object : ViewOutlineProvider() {
             override fun getOutline(view: View?, outline: Outline?) {
                 outline?.setRoundRect(0, 0, view?.width!!, view.height, 16.dp)
             }
 
         }
+        infoText.text = "批量生成的手机号都为10位\n\n" +
+                "待完成功能：\n" +
+                "批量生成亲戚称呼\n" +
+                "批量生成领导/老师/长辈称呼\n"
         actionButton.clipToOutline = true
         val editText = findViewById<EditText>(R.id.edit_text)
 
@@ -58,6 +68,24 @@ class MainActivity : AppCompatActivity() {
                 }
         }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.about, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_about -> {
+                Intent().apply {
+                    action = "android.intent.action.VIEW"
+                    data = Uri.parse("https://blog.lagee.gay/about/")
+                    startActivity(this)
+                }
+            }
+        }
+        return true
     }
 
     private fun createRawData(size: Int): List<Contacts> {
@@ -111,9 +139,10 @@ class MainActivity : AppCompatActivity() {
     private fun createName(index: Int): String {
         val builder = StringBuilder()
         val random = (0..10).random()
-        val isGirl = index % 2 == 0
+        val isGirl = index % 2 == 0  //随机切换性别
         appendName(isGirl, builder)
-        if (random > 5) {
+        if (random > 5) {       //随机切换两字/三字姓名
+
             appendName(isGirl, builder)
         }
         return builder.toString()
