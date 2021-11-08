@@ -6,21 +6,23 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Outline
 import android.net.Uri
+import android.os.Build
 import android.provider.ContactsContract
 import android.provider.ContactsContract.RawContacts
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.Data
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewOutlineProvider
+import android.view.*
+import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.geekvvv.contactbuilder.data.Contacts
+import com.geekvvv.contactbuilder.utils.StatusBarUtils
 import com.geekvvv.contactbuilder.utils.dp
 import com.permissionx.guolindev.PermissionX
 import kotlin.random.Random
@@ -36,8 +38,10 @@ class MainActivity : AppCompatActivity() {
         "辰士以建家致树炎德行时泰盛雄琛钧冠策腾伟刚勇毅俊峰强军平保东文辉力明永健世广志义兴良海山仁波宁贵福生龙元全国胜学祥才发成康星光天达安岩中茂武新利清飞彬富顺信子杰楠榕风航弘"
 
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        StatusBarUtils.setStatusBar(this, true, Color.WHITE, translucent = true)
         setContentView(R.layout.activity_main)
         val actionButton = findViewById<TextView>(R.id.action_button)
         val infoText = findViewById<TextView>(R.id.info_text)
@@ -101,7 +105,14 @@ class MainActivity : AppCompatActivity() {
         return contacts
     }
 
-    private fun createList(contacts: List<Contacts>) = contacts.forEach { addContact(it) }
+    private fun createList(contacts: List<Contacts>) {
+        for (i in contacts.indices) {
+            addContact(contacts[i])
+            if (i == contacts.size - 1) {
+                Toast.makeText(this, "生成联系人完成，请到通讯录查看（结果可能存在短暂延迟）", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     private fun addContact(contacts: Contacts) {
         val phone = contacts.phone
