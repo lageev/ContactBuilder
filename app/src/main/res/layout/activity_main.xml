@@ -7,6 +7,8 @@
     android:gravity="bottom"
     android:layout_height="match_parent"
     android:padding="24dp"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     tools:context=".MainActivity">
 
 
@@ -15,6 +17,7 @@
             android:layout_height="wrap_content"
             android:text="输入生成数量按确定即可\n数量尽量小于100"
             android:textSize="24sp"
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_gravity="center_horizontal"
             />
@@ -63,6 +66,17 @@
             android:text="确定"
             android:textColor="@color/white"
             android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="仅供娱乐"
+        android:layout_marginTop="30dp"
+        android:textSize="10sp"
+        android:layout_marginBottom="6dp"
+        android:textColor="@color/secondary_text_color_dark"
+        android:layout_gravity="center_horizontal"
+        />
 
 
 
