@@ -62,9 +62,10 @@ class MainActivity : AppCompatActivity() {
 
         }
         infoText.text = "批量生成的手机号都为10位\n\n" +
+                "务必在系统分身或备用机上测试!!!\n\n"+
                 "待完成功能：\n" +
-                "批量生成亲戚称呼\n" +
-                "批量生成领导/老师/长辈称呼\n"
+                "批量生成亲戚联系人\n" +
+                "批量生成领导/老师/长辈联系人\n"
         actionButton.clipToOutline = true
 
         footInfo.apply {
