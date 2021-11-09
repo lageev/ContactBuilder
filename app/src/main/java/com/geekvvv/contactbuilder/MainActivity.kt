@@ -17,6 +17,7 @@ import android.provider.ContactsContract.Data
 import android.view.*
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -25,6 +26,9 @@ import com.geekvvv.contactbuilder.data.Contacts
 import com.geekvvv.contactbuilder.utils.StatusBarUtils
 import com.geekvvv.contactbuilder.utils.dp
 import com.permissionx.guolindev.PermissionX
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 import kotlin.text.StringBuilder
 
@@ -38,12 +42,15 @@ class MainActivity : AppCompatActivity() {
         "辰士以建家致树炎德行时泰盛雄琛钧冠策腾伟刚勇毅俊峰强军平保东文辉力明永健世广志义兴良海山仁波宁贵福生龙元全国胜学祥才发成康星光天达安岩中茂武新利清飞彬富顺信子杰楠榕风航弘"
 
 
+    private var isCreating = false
+    private lateinit var actionButton: TextView
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         StatusBarUtils.setStatusBar(this, true, Color.WHITE, translucent = true)
         setContentView(R.layout.activity_main)
-        val actionButton = findViewById<TextView>(R.id.action_button)
+        actionButton = findViewById(R.id.action_button)
         val infoText = findViewById<TextView>(R.id.info_text)
         actionButton.outlineProvider = object : ViewOutlineProvider() {
             override fun getOutline(view: View?, outline: Outline?) {
@@ -59,15 +66,21 @@ class MainActivity : AppCompatActivity() {
         val editText = findViewById<EditText>(R.id.edit_text)
 
         actionButton.setOnClickListener {
+            actionButton.text = "生成中..."
             val text = editText.text
             if (text.isNullOrEmpty() || text.toString().toInt() <= 0) {
                 Toast.makeText(this, "请输入大于0的整数", Toast.LENGTH_SHORT).show()
+                GlobalScope.launch(Dispatchers.Main) {
+                    actionButton.text = "完成"
+                }
                 return@setOnClickListener
             }
             PermissionX.init(this).permissions(Manifest.permission.WRITE_CONTACTS)
                 .request { allGranted, _, _ ->
                     if (allGranted) {
-                        createList(createRawData(text.toString().toInt()))
+                        GlobalScope.launch(Dispatchers.IO) {
+                            createList(createRawData(text.toString().toInt()))
+                        }
                     }
                 }
         }
@@ -106,10 +119,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createList(contacts: List<Contacts>) {
+        if (isCreating) {
+            return
+        }
+        isCreating = true
         for (i in contacts.indices) {
             addContact(contacts[i])
             if (i == contacts.size - 1) {
-                Toast.makeText(this, "生成联系人完成，请到通讯录查看（结果可能存在短暂延迟）", Toast.LENGTH_LONG).show()
+                isCreating = false
+                val activity = this
+                GlobalScope.launch(Dispatchers.Main) {
+                    actionButton.text = "完成"
+                    Toast.makeText(activity, "生成联系人完成，请到通讯录查看（结果可能存在短暂延迟）", Toast.LENGTH_LONG)
+                        .show()
+                }
             }
         }
     }
@@ -153,7 +176,6 @@ class MainActivity : AppCompatActivity() {
         val isGirl = index % 2 == 0  //随机切换性别
         appendName(isGirl, builder)
         if (random > 5) {       //随机切换两字/三字姓名
-
             appendName(isGirl, builder)
         }
         return builder.toString()

@@ -13,6 +13,7 @@ object StatusBarUtils {
         val decorView = window.decorView
         var visibility = decorView.systemUiVisibility
 
+        //还没研究新api怎么实现
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)

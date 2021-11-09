@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="输入生成数量按确定即可\n数量尽量小于100"
+        android:text="输入生成数量按完成即可\n数量尽量小于100"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -57,12 +57,14 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:background="@color/design_default_color_primary_variant"
+        android:foreground="?android:selectableItemBackground"
         android:gravity="center"
         android:minWidth="84dp"
         android:padding="16dp"
-        android:text="确定"
+        android:text="完成"
         android:textColor="@color/white"
         android:textSize="18sp" />
+
 
     <TextView
         android:layout_width="wrap_content"
