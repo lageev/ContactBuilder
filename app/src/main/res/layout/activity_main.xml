@@ -67,12 +67,12 @@
 
 
     <TextView
+        android:id="@+id/foot_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="6dp"
-        android:text="仅供娱乐"
         android:textColor="@color/secondary_text_color_dark"
         android:textSize="10sp" />
 

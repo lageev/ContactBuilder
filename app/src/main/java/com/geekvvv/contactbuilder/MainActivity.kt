@@ -14,6 +14,8 @@ import android.provider.ContactsContract
 import android.provider.ContactsContract.RawContacts
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.Data
+import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.view.*
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.widget.EditText
@@ -52,6 +54,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         actionButton = findViewById(R.id.action_button)
         val infoText = findViewById<TextView>(R.id.info_text)
+        val footInfo = findViewById<TextView>(R.id.foot_info)
         actionButton.outlineProvider = object : ViewOutlineProvider() {
             override fun getOutline(view: View?, outline: Outline?) {
                 outline?.setRoundRect(0, 0, view?.width!!, view.height, 16.dp)
@@ -63,6 +66,12 @@ class MainActivity : AppCompatActivity() {
                 "批量生成亲戚称呼\n" +
                 "批量生成领导/老师/长辈称呼\n"
         actionButton.clipToOutline = true
+
+        footInfo.apply {
+            text= Html.fromHtml("仅供娱乐  by <a href=\"https://blog.lagee.gay/about\">酷安小黄</a>",0)
+            movementMethod = LinkMovementMethod.getInstance()
+        }
+
         val editText = findViewById<EditText>(R.id.edit_text)
 
         actionButton.setOnClickListener {
@@ -97,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_about -> {
                 Intent().apply {
                     action = "android.intent.action.VIEW"
-                    data = Uri.parse("https://blog.lagee.gay/about/")
+                    data = Uri.parse("https://blog.lagee.gay/about")
                     startActivity(this)
                 }
             }
