@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         "辰士以建家致树炎德行时泰盛雄琛钧冠策腾伟刚勇毅俊峰强军平保东文辉力明永健世广志义兴良海山仁波宁贵福生龙元全国胜学祥才发成康星光天达安岩中茂武新利清飞彬富顺信子杰楠榕风航弘"
 
 
+
     private var isCreating = false
     private lateinit var actionButton: TextView
 
