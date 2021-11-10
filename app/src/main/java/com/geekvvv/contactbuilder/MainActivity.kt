@@ -1,18 +1,36 @@
 package com.geekvvv.contactbuilder
 
+import android.Manifest
 import android.os.Bundle
 import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.content.ContentUris
 import android.content.ContentValues
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.Outline
+import android.net.Uri
+import android.os.Build
 import android.provider.ContactsContract
 import android.provider.ContactsContract.RawContacts
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.provider.ContactsContract.Data
+import android.text.Html
+import android.text.method.LinkMovementMethod
+import android.view.*
+import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.geekvvv.contactbuilder.data.Contacts
+import com.geekvvv.contactbuilder.utils.StatusBarUtils
+import com.geekvvv.contactbuilder.utils.dp
+import com.permissionx.guolindev.PermissionX
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 import kotlin.text.StringBuilder
 
@@ -26,20 +44,76 @@ class MainActivity : AppCompatActivity() {
         "辰士以建家致树炎德行时泰盛雄琛钧冠策腾伟刚勇毅俊峰强军平保东文辉力明永健世广志义兴良海山仁波宁贵福生龙元全国胜学祥才发成康星光天达安岩中茂武新利清飞彬富顺信子杰楠榕风航弘"
 
 
+
+    private var isCreating = false
+    private lateinit var actionButton: TextView
+
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        StatusBarUtils.setStatusBar(this, true, Color.WHITE, translucent = true)
         setContentView(R.layout.activity_main)
-        val actionButton = findViewById<TextView>(R.id.action_button)
-        val editText = findViewById<EditText>(R.id.edit_text)
-        actionButton.setOnClickListener {
-            val text = editText.text
-            if (text.isNullOrEmpty() || text.toString() == "0") {
-                Toast.makeText(this, "请输入大于0的整数", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+        actionButton = findViewById(R.id.action_button)
+        val infoText = findViewById<TextView>(R.id.info_text)
+        val footInfo = findViewById<TextView>(R.id.foot_info)
+        actionButton.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View?, outline: Outline?) {
+                outline?.setRoundRect(0, 0, view?.width!!, view.height, 16.dp)
             }
-            createList(createRawData(text.toString().toInt()))
+
+        }
+        infoText.text = "批量生成的手机号都为10位\n\n" +
+                "务必在系统分身或备用机上测试!!!\n\n"+
+                "待完成功能：\n" +
+                "批量生成亲戚联系人\n" +
+                "批量生成领导/老师/长辈联系人\n"
+        actionButton.clipToOutline = true
+
+        footInfo.apply {
+            text= Html.fromHtml("仅供娱乐  by <a href=\"https://blog.lagee.gay/about\">酷安小黄</a>",0)
+            movementMethod = LinkMovementMethod.getInstance()
         }
 
+        val editText = findViewById<EditText>(R.id.edit_text)
+
+        actionButton.setOnClickListener {
+            actionButton.text = "生成中..."
+            val text = editText.text
+            if (text.isNullOrEmpty() || text.toString().toInt() <= 0) {
+                Toast.makeText(this, "请输入大于0的整数", Toast.LENGTH_SHORT).show()
+                GlobalScope.launch(Dispatchers.Main) {
+                    actionButton.text = "完成"
+                }
+                return@setOnClickListener
+            }
+            PermissionX.init(this).permissions(Manifest.permission.WRITE_CONTACTS)
+                .request { allGranted, _, _ ->
+                    if (allGranted) {
+                        GlobalScope.launch(Dispatchers.IO) {
+                            createList(createRawData(text.toString().toInt()))
+                        }
+                    }
+                }
+        }
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.about, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_about -> {
+                Intent().apply {
+                    action = "android.intent.action.VIEW"
+                    data = Uri.parse("https://blog.lagee.gay/about")
+                    startActivity(this)
+                }
+            }
+        }
+        return true
     }
 
     private fun createRawData(size: Int): List<Contacts> {
@@ -56,8 +130,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createList(contacts: List<Contacts>) {
-        contacts.forEach {
-            addContact(it)
+        if (isCreating) {
+            return
+        }
+        isCreating = true
+        for (i in contacts.indices) {
+            addContact(contacts[i])
+            if (i == contacts.size - 1) {
+                isCreating = false
+                val activity = this
+                GlobalScope.launch(Dispatchers.Main) {
+                    actionButton.text = "完成"
+                    Toast.makeText(activity, "生成联系人完成，请到通讯录查看（结果可能存在短暂延迟）", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
         }
     }
 
@@ -93,27 +180,29 @@ class MainActivity : AppCompatActivity() {
         values.clear()
     }
 
-    private val simpleGirlName = girlName[Random.nextInt(0, girlName.length)].toString()
-    private val simpleBoyName = boyName[Random.nextInt(0, boyName.length)].toString()
-
 
     private fun createName(index: Int): String {
         val builder = StringBuilder()
         val random = (0..10).random()
-        val isGirl = index % 2 == 0
-        if (isGirl) {
-            builder.append(simpleGirlName)
-        } else {
-            builder.append(simpleBoyName)
-        }
-        if (random > 5) {
-            if (isGirl) {
-                builder.append(simpleGirlName)
-            } else {
-                builder.append(simpleBoyName)
-            }
+        val isGirl = index % 2 == 0  //随机切换性别
+        appendName(isGirl, builder)
+        if (random > 5) {       //随机切换两字/三字姓名
+            appendName(isGirl, builder)
         }
         return builder.toString()
+    }
+
+    private fun appendName(isGirl: Boolean, builder: StringBuilder) {
+        when {
+            isGirl -> {
+                builder.append(girlName[Random.nextInt(0, girlName.length)].toString())
+
+            }
+            else -> {
+                builder.append(boyName[Random.nextInt(0, boyName.length)].toString())
+
+            }
+        }
     }
 
 

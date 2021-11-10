@@ -3,38 +3,78 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:gravity="bottom"
+    android:background="@color/white"
+    android:orientation="vertical"
     android:padding="24dp"
     tools:context=".MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="请输入要生成联系人的数量\n（尽量小于20）"
-        android:textSize="24sp"
         android:layout_gravity="center_horizontal"
-        />
+        android:text="输入生成数量按完成即可\n数量尽量小于100"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/edit_text"
-        android:layout_width="100dp"
-        android:layout_marginTop="16dp"
+    <TextView
+        android:id="@+id/info_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/grey_text"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.mtjin.library.BorderEditText
+        android:id="@+id/edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:hint="请输入要生成联系人的数量"
         android:inputType="number"
-        android:layout_gravity="center_horizontal" />
+        android:padding="16dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        app:border_background_color="@color/grey_bg"
+        app:border_corner_radius="16dp"
+        app:border_focused_activated="false"
+        app:border_stroke_width="0dp" />
 
     <TextView
         android:id="@+id/action_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
         android:background="@color/design_default_color_primary_variant"
+        android:foreground="?android:selectableItemBackground"
         android:gravity="center"
         android:minWidth="84dp"
         android:padding="16dp"
-        android:layout_marginTop="16dp"
-        android:text="确定"
+        android:text="完成"
         android:textColor="@color/white"
-        android:layout_gravity="center_horizontal" />
+        android:textSize="18sp" />
+
+
+    <TextView
+        android:id="@+id/foot_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="6dp"
+        android:textColor="@color/secondary_text_color_dark"
+        android:textSize="10sp" />
+
 
 </LinearLayout>
