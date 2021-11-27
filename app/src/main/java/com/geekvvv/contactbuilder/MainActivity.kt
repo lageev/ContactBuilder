@@ -2,24 +2,15 @@ package com.geekvvv.contactbuilder
 
 import android.Manifest
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.StructuredName
-import android.content.ContentUris
-import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Outline
 import android.net.Uri
 import android.os.Build
-import android.provider.ContactsContract
-import android.provider.ContactsContract.RawContacts
-import android.provider.ContactsContract.CommonDataKinds.Phone
-import android.provider.ContactsContract.Data
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.*
-import android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -33,9 +24,8 @@ import com.permissionx.guolindev.PermissionX
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import ui.MoreActionDialog
+import com.geekvvv.contactbuilder.ui.MoreActionDialog
 import kotlin.random.Random
-import kotlin.text.StringBuilder
 
 class MainActivity : AppCompatActivity() {
 

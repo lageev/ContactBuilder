@@ -1,24 +1,16 @@
-package ui
+package com.geekvvv.contactbuilder.ui
 
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import android.graphics.Color
-import android.graphics.Rect
-import android.graphics.drawable.*
-import android.os.Build
 
-
-import android.view.ViewGroup
 
 import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
 import com.geekvvv.contactbuilder.MainActivity
 import com.geekvvv.contactbuilder.R
-import com.geekvvv.contactbuilder.utils.dp
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
