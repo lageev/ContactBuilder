@@ -7,6 +7,7 @@ apk安装包：[点此下载](https://github.com/geekvxyz/ContactBuilder/release
 
 + 支持生成中文姓名联系人
 + 生成的联系人手机号均为10位国内无意义号码（考虑到隐私风险）
++ v1.0.2新增生成亲戚联系人、工作联系人
 
 
 
