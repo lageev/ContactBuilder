@@ -25,28 +25,24 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.geekvvv.contactbuilder.data.Contacts
+import com.geekvvv.contactbuilder.data.DataFactory
+import com.geekvvv.contactbuilder.data.DataFactory.familyName
 import com.geekvvv.contactbuilder.utils.StatusBarUtils
 import com.geekvvv.contactbuilder.utils.dp
 import com.permissionx.guolindev.PermissionX
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import ui.MoreActionDialog
 import kotlin.random.Random
 import kotlin.text.StringBuilder
 
 class MainActivity : AppCompatActivity() {
 
-    private val familyName =
-        "陈林黄张李王吴刘蔡杨许郑谢洪郭邱曾廖赖徐周叶苏庄吕江何萧罗高周叶苏庄吕江何萧罗高潘简朱锺彭游詹胡施沈余卢梁赵颜柯翁魏孙戴范方宋邓杜傅侯曹薛丁卓马阮董唐温蓝蒋石古纪姚连冯欧程汤黄田康姜汪白邹尤巫钟黎涂龚严韩袁金童陆夏柳凃邵"
-    private val girlName =
-        "嘉琼桂娣叶璧璐娅琦晶妍茜秋珊莎锦黛青倩婷姣婉娴瑾颖露瑶怡婵雁蓓纨仪荷丹蓉眉君琴蕊薇菁梦岚苑婕馨瑗琰韵融园艺咏卿聪澜纯毓悦昭冰爽琬茗羽希宁欣飘育滢馥筠柔竹霭凝晓欢霄枫芸菲寒伊亚宜可姬舒影荔枝思丽秀娟英华慧巧美娜静淑惠珠翠雅芝玉萍红娥玲芬芳燕彩春菊勤珍贞莉兰凤洁梅琳素云莲真环雪荣爱妹霞香月莺媛艳瑞凡佳"
-    private val boyName =
-        "辰士以建家致树炎德行时泰盛雄琛钧冠策腾伟刚勇毅俊峰强军平保东文辉力明永健世广志义兴良海山仁波宁贵福生龙元全国胜学祥才发成康星光天达安岩中茂武新利清飞彬富顺信子杰楠榕风航弘"
-
-
-
     private var isCreating = false
     private lateinit var actionButton: TextView
+    private lateinit var moreActionButton: TextView
+    var setting = "111"
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,27 +50,37 @@ class MainActivity : AppCompatActivity() {
         StatusBarUtils.setStatusBar(this, true, Color.WHITE, translucent = true)
         setContentView(R.layout.activity_main)
         actionButton = findViewById(R.id.action_button)
+        moreActionButton = findViewById(R.id.more_action_button)
         val infoText = findViewById<TextView>(R.id.info_text)
         val footInfo = findViewById<TextView>(R.id.foot_info)
         actionButton.outlineProvider = object : ViewOutlineProvider() {
             override fun getOutline(view: View?, outline: Outline?) {
-                outline?.setRoundRect(0, 0, view?.width!!, view.height, 16.dp)
+                outline?.setRoundRect(0, 0, view?.width!!, view.height, 28.dp)
+            }
+
+        }
+        moreActionButton.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View?, outline: Outline?) {
+                outline?.setRoundRect(0, 0, view?.width!!, view.height, 28.dp)
             }
 
         }
         infoText.text = "批量生成的手机号都为10位\n\n" +
-                "务必在系统分身或备用机上测试!!!\n\n"+
-                "待完成功能：\n" +
-                "批量生成亲戚联系人\n" +
-                "批量生成领导/老师/长辈联系人\n"
+                "务必在系统分身或备用机上测试!!!"
         actionButton.clipToOutline = true
+        moreActionButton.clipToOutline = true
 
         footInfo.apply {
-            text= Html.fromHtml("仅供娱乐  by <a href=\"https://blog.lagee.gay/about\">酷安小黄</a>",0)
+            text = Html.fromHtml("仅供娱乐  by <a href=\"https://blog.lagee.gay/about\">酷安小黄</a>", 0)
             movementMethod = LinkMovementMethod.getInstance()
         }
 
         val editText = findViewById<EditText>(R.id.edit_text)
+
+        moreActionButton.setOnClickListener {
+            val dialog = MoreActionDialog()
+            dialog.show(supportFragmentManager, null)
+        }
 
         actionButton.setOnClickListener {
             actionButton.text = "生成中..."
@@ -90,7 +96,11 @@ class MainActivity : AppCompatActivity() {
                 .request { allGranted, _, _ ->
                     if (allGranted) {
                         GlobalScope.launch(Dispatchers.IO) {
-                            createList(createRawData(text.toString().toInt()))
+                            createList(
+                                createRawData(
+                                    text.toString().toInt()
+                                ) as MutableList<Contacts>
+                            )
                         }
                     }
                 }
@@ -121,21 +131,36 @@ class MainActivity : AppCompatActivity() {
         for (index in 1..size) {
             contacts.add(
                 Contacts(
-                    "${familyName[Random.nextInt(0, familyName.length)]}${createName(index)}",
-                    "${getPhoneRandom()}"
+                    "${familyName[Random.nextInt(0, familyName.length)]}${
+                        DataFactory.createName(index)
+                    }",
+                    "${DataFactory.getRandomPhoneNumber()}"
                 )
             )
         }
         return contacts
     }
 
-    private fun createList(contacts: List<Contacts>) {
+    private fun createList(contacts: MutableList<Contacts>) {
         if (isCreating) {
             return
         }
         isCreating = true
+        val isOtherRelation = setting[2].toString() == "1"
+        val isWorkRelation = setting[1].toString() == "1"
+        val isBestRelation = setting[0].toString() == "1"
+        if (isBestRelation) {
+            contacts.addAll(DataFactory.createBestRelativeData())
+        }
+        if (isWorkRelation) {
+            contacts.addAll(DataFactory.createWorkRelativeData())
+        }
+        if (isOtherRelation) {
+            contacts.addAll(DataFactory.createOtherRelativeData())
+        }
+
         for (i in contacts.indices) {
-            addContact(contacts[i])
+            DataFactory.addContact(contacts[i], this)
             if (i == contacts.size - 1) {
                 isCreating = false
                 val activity = this
@@ -147,64 +172,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun addContact(contacts: Contacts) {
-        val phone = contacts.phone
-
-        // 创建一个空的ContentValues
-        val values = ContentValues()
-        // 向RawContacts.CONTENT_URI空值插入，
-        // 先获取Android系统返回的rawContactId
-        // 后面要基于此id插入值
-        val rawContactUri = contentResolver.insert(RawContacts.CONTENT_URI, values)
-        val rawContactId = rawContactUri?.let { ContentUris.parseId(it) }
-        values.clear()
-
-        values.put(ContactsContract.Contacts.Data.RAW_CONTACT_ID, rawContactId)
-        // 内容类型
-        values.put(ContactsContract.Contacts.Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE)
-        // 联系人名字
-        values.put(StructuredName.GIVEN_NAME, contacts.name)
-        // 向联系人URI添加联系人名字
-        contentResolver.insert(Data.CONTENT_URI, values)
-        values.clear()
-
-        values.put(ContactsContract.Contacts.Data.RAW_CONTACT_ID, rawContactId)
-        values.put(ContactsContract.Contacts.Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-        // 联系人的电话号码
-        values.put(Phone.NUMBER, phone)
-        // 电话类型
-        values.put(Phone.TYPE, Phone.TYPE_MOBILE)
-        // 向联系人电话号码URI添加电话号码
-        contentResolver.insert(Data.CONTENT_URI, values)
-        values.clear()
-    }
-
-
-    private fun createName(index: Int): String {
-        val builder = StringBuilder()
-        val random = (0..10).random()
-        val isGirl = index % 2 == 0  //随机切换性别
-        appendName(isGirl, builder)
-        if (random > 5) {       //随机切换两字/三字姓名
-            appendName(isGirl, builder)
-        }
-        return builder.toString()
-    }
-
-    private fun appendName(isGirl: Boolean, builder: StringBuilder) {
-        when {
-            isGirl -> {
-                builder.append(girlName[Random.nextInt(0, girlName.length)].toString())
-
-            }
-            else -> {
-                builder.append(boyName[Random.nextInt(0, boyName.length)].toString())
-
-            }
-        }
-    }
-
-
-    private fun getPhoneRandom() = (1000000000..1999999999).random()
 }
