@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 2111081,
-      "versionName": "1.0.0",
-      "outputFile": "app-release.apk"
+      "versionCode": 2111271,
+      "versionName": "1.0.2",
+      "outputFile": "ContactBuilder-1.0.2-2111271-release.apk"
     }
   ],
   "elementType": "File"
