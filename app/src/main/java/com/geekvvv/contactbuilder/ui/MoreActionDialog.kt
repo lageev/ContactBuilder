@@ -33,9 +33,9 @@ class MoreActionDialog : BottomSheetDialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         val view = View.inflate(context, R.layout.dialog_more_action, null)
         dialog.setContentView(view)
-        checkBox3 = view.findViewById<CheckBox>(R.id.checkbox3)
-        checkBox2 = view.findViewById<CheckBox>(R.id.checkbox2)
-        checkBox1 = view.findViewById<CheckBox>(R.id.checkbox)
+        checkBox3 = view.findViewById(R.id.checkbox3)
+        checkBox2 = view.findViewById(R.id.checkbox2)
+        checkBox1 = view.findViewById(R.id.checkbox)
         view.findViewById<TextView>(R.id.other_relation).setOnClickListener {
             checkBox3.isChecked = !checkBox3.isChecked
         }
@@ -45,18 +45,36 @@ class MoreActionDialog : BottomSheetDialogFragment() {
         view.findViewById<TextView>(R.id.best_relation).setOnClickListener {
             checkBox1.isChecked = !checkBox1.isChecked
         }
+        val activity = requireActivity()
+        if (activity is MainActivity) {
 
-//        checkBox1.setOnCheckedChangeListener { buttonView, isChecked ->
-//
-//        }
-//
-//        checkBox2.setOnCheckedChangeListener { buttonView, isChecked ->
-//
-//        }
-//
-//        checkBox3.setOnCheckedChangeListener { buttonView, isChecked ->
-//
-//        }
+            checkBox1.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    activity.setting = activity.setting or MainActivity.setting_isBestRelation
+                } else {
+                    activity.setting =
+                        activity.setting and MainActivity.setting_isBestRelation.inv()
+                }
+            }
+
+            checkBox2.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    activity.setting = activity.setting or MainActivity.setting_isWorkRelation
+                } else {
+                    activity.setting =
+                        activity.setting and MainActivity.setting_isWorkRelation.inv()
+                }
+            }
+
+            checkBox3.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    activity.setting = activity.setting or MainActivity.setting_isOtherRelation
+                } else {
+                    activity.setting =
+                        activity.setting and MainActivity.setting_isOtherRelation.inv()
+                }
+            }
+        }
 
         mBehavior = BottomSheetBehavior.from(view.parent as View)
 
@@ -79,13 +97,7 @@ class MoreActionDialog : BottomSheetDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        val checkBox1Value=checkBox1.isChecked.valueTo("1","0")
-        val checkBox2Value=checkBox2.isChecked.valueTo("1","0")
-        val checkBox3Value=checkBox3.isChecked.valueTo("1","0")
-        val activity=requireActivity()
-        if (activity is MainActivity){
-            activity.setting="$checkBox1Value$checkBox2Value$checkBox3Value"
-        }
+
     }
 
     private inline fun <reified T : Any?> Boolean.valueTo(whenTrue: T, whenFalse: T): T {

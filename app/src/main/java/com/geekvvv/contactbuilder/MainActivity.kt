@@ -32,7 +32,14 @@ class MainActivity : AppCompatActivity() {
     private var isCreating = false
     private lateinit var actionButton: TextView
     private lateinit var moreActionButton: TextView
-    var setting = "111"
+    var setting = setting_isBestRelation or setting_isWorkRelation or setting_isOtherRelation
+
+    companion object {
+        const val setting_isBestRelation = 0x1
+        const val setting_isWorkRelation = 0x2
+        const val setting_isOtherRelation = 0x4
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,9 +143,9 @@ class MainActivity : AppCompatActivity() {
             return
         }
         isCreating = true
-        val isOtherRelation = setting[2].toString() == "1"
-        val isWorkRelation = setting[1].toString() == "1"
-        val isBestRelation = setting[0].toString() == "1"
+        val isOtherRelation = setting and setting_isOtherRelation > 0
+        val isWorkRelation = setting and setting_isWorkRelation > 0
+        val isBestRelation = setting and setting_isBestRelation > 0
         if (isBestRelation) {
             contacts.addAll(DataFactory.createBestRelativeData())
         }
