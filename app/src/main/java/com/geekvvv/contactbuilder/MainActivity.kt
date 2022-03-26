@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity() {
         const val setting_isOtherRelation = 0x4
     }
 
-
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
