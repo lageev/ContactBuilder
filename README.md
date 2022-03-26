@@ -12,6 +12,5 @@ apk安装包：[点此下载](https://github.com/geekvxyz/ContactBuilder/release
 
 
 
-<img src="https://i.loli.net/2021/11/27/TaeIYpWUVhHztkf.png" width = "300" height = "650" alt="图片名称" align=center />
-<img src="https://i.loli.net/2021/11/27/lZE8UyYjT7hcniQ.png" width = "300" height = "650" alt="图片名称" align=center />
+![未标题-1 拷贝.png](https://i.loli.net/2021/11/28/TpbH632CQUfj9wi.png)
 
