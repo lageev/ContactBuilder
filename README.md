@@ -4,6 +4,7 @@
 **务必在分身访客系统或者备用机上测试**
 
 apk安装包：[点此下载](https://github.com/lageev/ContactBuilder/releases/download/1.0.3/ContactBuilder-1.0.3-2203271-release.apk)
+
 1.0.1升级1.0.2请先卸载，因为上个版本的签名文件被我弄丢了。
 
 + 支持生成中文姓名联系人
