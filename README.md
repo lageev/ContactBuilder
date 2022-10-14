@@ -14,5 +14,5 @@ apk安装包：[点此下载](https://github.com/lageev/ContactBuilder/releases/
 
 
 
-![未标题-1 拷贝.png](https://i.loli.net/2021/11/28/TpbH632CQUfj9wi.png)
+![示例图.png](https://i.loli.net/2021/11/28/TpbH632CQUfj9wi.png)
 
